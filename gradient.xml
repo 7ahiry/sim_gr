@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<worldsens xmlns="http://worldsens.citi.insa-lyon.fr">
+
+<!-- == Worldsens ===================================================== -->
+<simulation nodes="1000" duration="1000s" x="1000" y="1000" z="0"/>
+
+<!-- == PROPAGATION, INTERFERENCES and MODULATION ===================== -->
+<entity name="omnidirectionnal" library="antenna_omnidirectionnal" >
+</entity>
+
+<entity name="radio" library="radio_half1d" >
+  <default T_b="1" dBm="21" channel="0" modulation="none"/>
+</entity>
+
+<entity name="none" library="modulation_none">
+</entity>
+
+<entity name="interf" library="interferences_none">
+</entity>
+
+<entity name="range" library="propagation_range" >
+<init  range="120"/>
+</entity>
+
+<!-- == MOBILITY ===================================================== -->
+<entity name="static-pos" library="mobility_filestatic" >
+  <init file="topo.conf"/>
+</entity>
+
+<!-- == APPLICATION ===================================================== -->
+<entity name="gradient" library="application_gr" >
+</entity>
+
+
+<!-- == MAC ===================== -->
+<entity name="mac" library="mac_802_15_4_868_bpsk_u_csma_ca" >
+</entity>
+
+<entity name="battery" library="energy_myenergy" >
+  <default energy="20000000000" tx="2" rx="1"/>
+</entity>
+
+
+<!-- == Environment ===================================================== -->
+<environment>
+<propagation entity="range" range="120"/>
+<interferences entity="interf"/>
+<modulation entity="none"/>
+</environment>
+
+<!-- == Bundle ===================================================== -->
+<bundle name="sensor" worldsens="false" default="true" birth="0">
+  <mobility entity="static-pos"/>
+  <energy entity="battery"/> 
+  
+  <antenna entity="omnidirectionnal">
+    <up entity="radio"/>
+  </antenna>
+
+  <with entity="radio">
+    <up entity="mac"/>
+    <down entity="omnidirectionnal"/>
+  </with>
+
+  <with entity="mac">
+    <up entity="gradient"/>
+    <down entity="radio"/>
+  </with>
+
+  <with entity="gradient">
+    <down entity="mac"/>
+  </with>
+</bundle>
+
+<!-- == Nodes ===================================================== -->
+
+</worldsens>
