@@ -37,7 +37,7 @@
 </entity>
 
 <entity name="battery" library="energy_myenergy" >
-  <default energy="20000000000" tx="2" rx="1"/>
+  <default energy="200000000" tx="2" rx="1"/>
 </entity>
 
 
